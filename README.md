@@ -1,6 +1,6 @@
 Introduction
 ------------
-Example for deployment [CakePHP](http://cakephp.org) v2 [project](http://github.com/rikkeisoft/cakephp2) use [Deployer](http://deployer.org).
+A sample of [CakePHP](http://cakephp.org) v2 [project](http://github.com/rikkeisoft/cakephp2) deployment using [Deployer](http://deployer.org).
 
 See [http://deployer.org](http://deployer.org) for more information and documentation about Deployer.
 See [other example project](http://github.com/oanhnn/deployer-example)
@@ -13,7 +13,7 @@ That's all!
 
 You can install [ssh2 extension](http://php.net/manual/en/book.ssh2.php) to speedup deployment process and enable [sockets](http://php.net/manual/en/book.sockets.php) for parallel deployment.
 
-Setting up [SSH agent forwarding](https://developer.github.com/guides/using-ssh-agent-forwarding/) if need.
+Setting up [SSH agent forwarding](https://developer.github.com/guides/using-ssh-agent-forwarding/) if needed.
 
 Installation
 ------------
@@ -30,14 +30,14 @@ $ composer create-project rikkeisoft/deployer-cakephp2 <target-directory>
 
 Usage
 -------------
-Custom `stage/dev.php` or make copy with other stage for your system.    
+Customize `stage/dev.php` or make a copy and write your own stage.
 First deployment:
 ```shell
 $ bin/dep configure <stage>
 $ bin/dep deploy <stage>
 ```
 
-Second deployment and after:
+Next deployments:
 ```shell
 $ bin/dep deploy <stage>
 ```
