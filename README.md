@@ -3,7 +3,8 @@ Introduction
 A sample of [CakePHP](http://cakephp.org) v2 [project](http://github.com/rikkeisoft/cakephp2) deployment using [Deployer](http://deployer.org).
 
 See [http://deployer.org](http://deployer.org) for more information and documentation about Deployer.
-See [other example project](http://github.com/oanhnn/deployer-example)
+
+Here is [another sample deployment](http://github.com/oanhnn/deployer-example).
 
 Requirements
 ------------
@@ -30,7 +31,8 @@ $ composer create-project rikkeisoft/deployer-cakephp2 <target-directory>
 
 Usage
 -------------
-Customize `stage/dev.php` or make a copy and write your own stage.
+Customize `stage/dev.php` or make a copy and write your own stages.
+
 First deployment:
 ```shell
 $ bin/dep configure <stage>
