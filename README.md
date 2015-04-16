@@ -1,6 +1,6 @@
 Introduction
 ------------
-A sample of [CakePHP](http://cakephp.org) v2 [project](http://github.com/rikkeisoft/cakephp2) deployment using [Deployer](http://deployer.org).
+A sample of [CakePHP](http://cakephp.org) v2 [project](http://github.com/rikkeisoft/cakephp2) deployment using [Deployer](http://github.com/deployphp/deployer).
 
 See [http://deployer.org](http://deployer.org) for more information and documentation about Deployer.
 
