@@ -208,11 +208,13 @@ Configure::write('Session', array(
 
 /**
  * A random string used in security hashing methods.
- */ Configure::write('Security.salt', '{{app.salt}}');
+ */
+ Configure::write('Security.salt', '{{app.salt}}');
 
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
- */ Configure::write('Security.cipherSeed', '{{app.cipherSeed}}');
+ */
+ Configure::write('Security.cipherSeed', '{{app.cipherSeed}}');
 
 /**
  * Apply timestamps with the last modified time to static assets (js, css, images).
@@ -252,7 +254,7 @@ Configure::write('Acl.database', 'default');
  * Uncomment this line and correct your server timezone to fix
  * any date & time related errors.
  */
-date_default_timezone_set('UTC');
+date_default_timezone_set('{{app.timezone}}');
 
 /**
  * Cache Engine Configuration

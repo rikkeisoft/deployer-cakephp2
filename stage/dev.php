@@ -14,6 +14,8 @@ server('dev-svr', '192.168.1.2', 22)
     ->env('app.cipherSeed',     '353533306162313964613031341102')
     
     ->env('app.domain',         'cakephp2.dev')
+        
+    ->env('app.timezone',       'UTC')
     
     ->env('redis.host',         '127.0.0.1')
     ->env('redis.port',         '6379')
