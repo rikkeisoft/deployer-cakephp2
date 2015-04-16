@@ -76,6 +76,9 @@ task('configure', function () {
                     $success = true;
                 }
             } catch (\Exception $e) {
+                if (isVerbose()) {
+                    write(sprintf("<fg=red>✘</fg=red> %s", $e->getMessage()));
+                }
                 $success = false;
             }
             // Delete tmp file
