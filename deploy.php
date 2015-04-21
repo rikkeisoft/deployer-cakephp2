@@ -155,6 +155,7 @@ task('deploy', [
     'deploy:release',
     'deploy:update_code',
     'deploy:shared',
+    'deploy:writable',
     'deploy:vendors',
     'deploy:symlink',
     'cleanup',
