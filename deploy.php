@@ -71,7 +71,7 @@ task('configure', function () {
                 $target   = preg_replace('/\.tpl$/', '', $file->getRelativePathname());
                 // Put contents and upload tmp file to server
                 if (file_put_contents($tmpFile, $contents) > 0) {
-                    run('mkdir -p {deploy_path}/shared/' . dirname($target));
+                    run('mkdir -p {{deploy_path}}/shared/' . dirname($target));
                     upload($tmpFile, 'shared/' . $target);
                     $success = true;
                 }
@@ -110,7 +110,7 @@ task('upload:cert_files', function(){
         $success = false;
         $target  = $file->getRelativePathname();
         try {
-            run('mkdir -p {deploy_path}/shared/' . dirname($target));
+            run('mkdir -p {{deploy_path}}/shared/' . dirname($target));
             upload($file->getRealPath(), 'shared/' . $target);
             $success = true;
         } catch (\Exception $e) {
@@ -130,18 +130,15 @@ task('upload:cert_files', function(){
  */
 task('backend:restart', function () {
     
-    within('{deploy_path}/current', function () {
+    within('{{deploy_path}}/current', function () {
         // TODO: stop all services
-    });
     
-    // Clear map files
-    run("redis-cli -h {redis.host} -p {redis.port} -n {redis.db} --raw keys \"{app.prefix}cake_core_file_map\" | xargs redis-cli -h {redis.host} -p {redis.port} -n {redis.db} del");
+        // Clear map files
+        run("redis-cli -h {{redis.host}} -p {{redis.port}} -n {{redis.db}} --raw keys \"{{app.prefix}}cake_core_file_map\" | xargs redis-cli -h {{redis.host}} -p {{redis.port}} -n {{redis.db}} del");
     
-    within('{deploy_path}/current', function () {
         // TODO: clear cache
-    });
+        run('Console/cake cache clear -f 1');
     
-    within('{deploy_path}/current', function () {
         // TODO: start all service
     });
     
