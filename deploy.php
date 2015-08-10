@@ -73,7 +73,6 @@ task('deploy', [
 ])->desc('Deploy your project');
 
 after('deploy', 'success');
-after('configure', 'upload:cert_files');
 
 /**
  * Load stage and list server
