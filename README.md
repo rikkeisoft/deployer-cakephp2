@@ -36,13 +36,18 @@ Customize `stage/dev.php` or make a copy and write your own stages.
 First deployment:   
 Create deploy directory in deploying server(s) if not exists, then run following commands   
 ```shell
-$ bin/dep configure <stage>
+$ bin/dep deploy:configure <stage>
 $ bin/dep deploy <stage>
 ```
 
 Next deployments:
 ```shell
 $ bin/dep deploy <stage>
+```
+
+Using options `-vvv` for debug
+```shell
+$ bin/dep deploy <stage> -vvv
 ```
 
 Contributing

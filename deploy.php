@@ -1,9 +1,9 @@
 <?php
 // require common recipe
 require 'recipe/common.php';
-foreach (glob(__DIR__ . '/stage/*.php') as $filename) {
-    include $filename;
-}
+require 'vendor/deployphp/recipes/recipes/configure.php';
+
+//set('ssh_type', 'ext-ssh2');
 
 /**
  * Set parameters
@@ -29,101 +29,13 @@ set('writable_dirs', [
 set('writable_use_sudo', false); // Using sudo in writable commands?
 
 /**
- * Make shared_dirs and configure files from templates
+ * Deploy start, prepare deploy directory
  */
-task('configure', function () {
-
-    /**
-     * Compiler template of configure files
-     * 
-     * @param string $contents
-     * @return string
-     */
-    $compiler = function ($contents) {
-        if (preg_match_all('/\{\{(.+?)\}\}/', $contents, $matches)) {
-            foreach ($matches[1] as $name) {
-                $value = env()->get($name);
-                if (is_null($value) || is_bool($value) || is_array($value)) {
-                    $value = var_export($value, true);
-                }
-                $contents = str_replace('{{' . $name . '}}', $value, $contents);
-            }
-        }
-        return $contents;
-    };
-
-    $finder   = new \Symfony\Component\Finder\Finder();
-    $iterator = $finder
-        ->files()
-        ->name('*.tpl')
-        ->in(__DIR__ . '/shared');
-
-    $tmpDir = sys_get_temp_dir();
-
-    /* @var $file \Symfony\Component\Finder\SplFileInfo */
-    foreach ($iterator as $file) {
-        $success = false;
-        // Make tmp file
-        $tmpFile = tempnam($tmpDir, 'tmp');
-        if (!empty($tmpFile)) {
-            try {
-                $contents = $compiler($file->getContents());
-                $target   = preg_replace('/\.tpl$/', '', $file->getRelativePathname());
-                // Put contents and upload tmp file to server
-                if (file_put_contents($tmpFile, $contents) > 0) {
-                    run('mkdir -p {{deploy_path}}/shared/' . dirname($target));
-                    upload($tmpFile, 'shared/' . $target);
-                    $success = true;
-                }
-            } catch (\Exception $e) {
-                if (isVerbose()) {
-                    write(sprintf("<fg=red>✘</fg=red> %s", $e->getMessage()));
-                }
-                $success = false;
-            }
-            // Delete tmp file
-            unlink($tmpFile);
-        }
-        if ($success) {
-            writeln(sprintf("<info>✔</info> %s", $file->getRelativePathname()));
-        } else {
-            writeln(sprintf("<fg=red>✘</fg=red> %s", $file->getRelativePathname()));
-        }
-    }
-})->desc('Make configure files for your stage');
-
-/**
- * Upload cert files
- */
-task('upload:cert_files', function(){
-    
-    writeln('Upload cert files');
-    
-    $finder   = new \Symfony\Component\Finder\Finder();
-    $iterator = $finder
-        ->files()
-        ->name('/\.(crt|key|cer)$/')
-        ->in(__DIR__ . '/shared');
-    
-    /* @var $file \Symfony\Component\Finder\SplFileInfo */
-    foreach ($iterator as $file) {
-        $success = false;
-        $target  = $file->getRelativePathname();
-        try {
-            run('mkdir -p {{deploy_path}}/shared/' . dirname($target));
-            upload($file->getRealPath(), 'shared/' . $target);
-            $success = true;
-        } catch (\Exception $e) {
-            $success = false;
-        }
-
-        if ($success) {
-            writeln(sprintf("<info>✔</info> %s", $target));
-        } else {
-            writeln(sprintf("<fg=red>✘</fg=red> %s", $target));
-        }
-    }
-})->desc('Upload cert files');
+task('deploy:start', function() {
+    cd('~');
+    run("if [ ! -d {{deploy_path}} ]; then mkdir -p {{deploy_path}}; fi");
+    cd('{{deploy_path}}');
+})->setPrivate();
 
 /**
  * Clear cache and restart backend services
@@ -148,6 +60,7 @@ task('backend:restart', function () {
  * Main task
  */
 task('deploy', [
+    'deploy:start',
     'deploy:prepare',
     'deploy:release',
     'deploy:update_code',
@@ -161,3 +74,11 @@ task('deploy', [
 
 after('deploy', 'success');
 after('configure', 'upload:cert_files');
+
+/**
+ * Load stage and list server
+ */
+foreach (glob(__DIR__ . '/stage/*.php') as $filename) {
+    include $filename;
+}
+//serverList(__DIR__ . '/stage/servers.yml');
